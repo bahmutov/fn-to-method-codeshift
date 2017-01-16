@@ -1,0 +1,15 @@
+{
+  "name": "fn-to-method-codeshift",
+  "version": "1.0.0",
+  "description": "Trying [jscodeshift](https://github.com/facebook/jscodeshift)",
+  "main": "index.js",
+  "scripts": {
+    "test": "jscodeshift index.js -t transform.js --dry --print"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jscodeshift": "0.3.30"
+  }
+}
