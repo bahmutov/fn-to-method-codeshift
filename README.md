@@ -322,4 +322,5 @@ We just use it as the first argument in `j.memberExpression` which is the
 "object".
 
 The transformation prints the code result `require('./calc').add` which
-matches what we need.
+matches what we need. Let us remove "--dry" parameter and save the output
+file.
