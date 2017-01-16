@@ -4,7 +4,7 @@
   "description": "Trying [jscodeshift](https://github.com/facebook/jscodeshift)",
   "main": "index.js",
   "scripts": {
-    "test": "jscodeshift index.js -t transform.js --dry --print"
+    "test": "jscodeshift desired.js -t transform.js --dry --print"
   },
   "keywords": [],
   "author": "",

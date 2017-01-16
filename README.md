@@ -186,3 +186,107 @@ function transform (file, api, options) {
 ```
 This should produce the same list, but if we had other function calls in our
 program, only the `require('./calc')` would be processed.
+
+## Desired output
+
+I found that the easiest way to transform one abstract syntax into another one
+is to take the desired output and call the transform function on it,
+printing all the nodes. In our case, let us just create a file `desired.js`
+with simple `require('./calc').add` line.
+
+Then I would see the created AST online at
+[http://astexplorer.net/](http://astexplorer.net/).
+
+File `index.js` with just `require('./calc')` source code has the following
+tree.
+
+```json
+{
+  "type": "Program",
+  "start": 0,
+  "end": 18,
+  "body": [
+    {
+      "type": "ExpressionStatement",
+      "start": 0,
+      "end": 17,
+      "expression": {
+        "type": "CallExpression",
+        "start": 0,
+        "end": 17,
+        "callee": {
+          "type": "Identifier",
+          "start": 0,
+          "end": 7,
+          "name": "require"
+        },
+        "arguments": [
+          {
+            "type": "Literal",
+            "start": 8,
+            "end": 16,
+            "value": "./calc",
+            "raw": "'./calc'"
+          }
+        ]
+      }
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+Same file with `require('./calc').add` produces slightly more complex tree
+
+```json
+{
+  "type": "Program",
+  "start": 0,
+  "end": 22,
+  "body": [
+    {
+      "type": "ExpressionStatement",
+      "start": 0,
+      "end": 21,
+      "expression": {
+        "type": "MemberExpression",
+        "start": 0,
+        "end": 21,
+        "object": {
+          "type": "CallExpression",
+          "start": 0,
+          "end": 17,
+          "callee": {
+            "type": "Identifier",
+            "start": 0,
+            "end": 7,
+            "name": "require"
+          },
+          "arguments": [
+            {
+              "type": "Literal",
+              "start": 8,
+              "end": 16,
+              "value": "./calc",
+              "raw": "'./calc'"
+            }
+          ]
+        },
+        "property": {
+          "type": "Identifier",
+          "start": 18,
+          "end": 21,
+          "name": "add"
+        },
+        "computed": false
+      }
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+Thus we need to transform every `require('./calc')` "CallExpression" into
+a "MemberExpression" with additional property "add".
+
+## Transformation
