@@ -164,5 +164,25 @@ Node {
   trailingComments: null }
 ```
 
+We are only interested in the call expressions `require('./calc')` thus
+we can filter our node collection. Let us filter "NodePath" objects
 
-
+```js
+const isRequire = n =>
+  n && n.callee && n.callee.name === 'require'
+const isUnary = args =>
+  Array.isArray(args) && args.length === 1
+const isCalc = arg => arg.value === './calc'
+const isRequireCalc = n =>
+  isRequire(n) && isUnary(n.arguments) && isCalc(n.arguments[0])
+function transform (file, api, options) {
+  const parsed = j(file.source)
+  parsed.find(j.CallExpression)
+    .filter(path => isRequireCalc(path.value))
+    .forEach(function (path) {
+      console.log(path.value)
+    })
+}
+```
+This should produce the same list, but if we had other function calls in our
+program, only the `require('./calc')` would be processed.
