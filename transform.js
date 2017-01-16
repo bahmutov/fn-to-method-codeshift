@@ -12,10 +12,13 @@ function transform (file, api, options) {
   console.log('transforming', file.path)
 
   const parsed = j(file.source)
-  parsed.find(j.ExpressionStatement)
-    // .filter(path => isRequireCalc(path.value))
-    .forEach(function (path) {
-      console.log(path.value)
+  parsed.find(j.CallExpression)
+    .filter(path => isRequireCalc(path.value))
+    .replaceWith(function (path) {
+      return j.memberExpression(
+        path.value,
+        j.identifier('add')
+      )
     })
 
   const transformed = parsed

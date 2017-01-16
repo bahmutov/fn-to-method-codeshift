@@ -290,3 +290,36 @@ Thus we need to transform every `require('./calc')` "CallExpression" into
 a "MemberExpression" with additional property "add".
 
 ## Transformation
+
+We are going to replace each filtered call expression with a member expression.
+We can tell the Collections api to replace the current syntax tree node with
+new value using `replaceWith` method.
+
+```js
+parsed.find(j.CallExpression)
+  .filter(path => isRequireCalc(path.value))
+  .replaceWith(function (path) {
+    // return new AST node
+  })
+```
+
+`jscodeshift` includes helpful
+[builder](https://github.com/facebook/jscodeshift#builders) functions that
+match 1 to 1 the AST names, just in lowercase. Here is our transformation
+
+```js
+.replaceWith(function (path) {
+  return j.memberExpression(
+    path.value,
+    j.identifier('add')
+  )
+})
+```
+
+Notice the trick - we are reusing the existing "CallExpression" in
+`path.value` so we do not have to construct `require('./calc')` node again.
+We just use it as the first argument in `j.memberExpression` which is the
+"object".
+
+The transformation prints the code result `require('./calc').add` which
+matches what we need.
