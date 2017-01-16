@@ -1,3 +1,5 @@
+# fn-to-method-codeshift
+
 ## Initial code
 
 `calc.js` exports single function that adds two numbers.
