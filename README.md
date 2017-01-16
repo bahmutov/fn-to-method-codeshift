@@ -52,3 +52,28 @@ dependency on [jscodeshift](https://github.com/facebook/jscodeshift#readme)
 We are running the transform in "dry" mode that will NOT overwrite the
 source file `index.js`. It will also print the output source code for
 now by `--print` option.
+
+## Change `calc` API
+
+Ket us change the API exported by the `calc.js` file. Instead of directly
+exporting a single function, let us export an object with `add` property.
+This allows us to add `sub`, `mul` and any other function in the future.
+
+```js
+// calc.js
+module.exports = {
+  add: function add(a, b) { return a + b }
+}
+```
+
+Our module `calc.js` changed its external "public" API, thus this is a major
+change according to [semantic versioning](http://semver.org/).
+Let us create a code transform that will change any client from using the
+exported function to use the exported "add" property.
+
+```js
+// existing client
+const add = require('./calc')
+// transformed client
+const add = rewuire('./calc').add
+```
