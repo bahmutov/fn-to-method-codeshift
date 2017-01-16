@@ -323,4 +323,17 @@ We just use it as the first argument in `j.memberExpression` which is the
 
 The transformation prints the code result `require('./calc').add` which
 matches what we need. Let us remove "--dry" parameter and save the output
-file.
+file. The diff shows the change.
+
+```diff
+-const add = require('./calc')
++const add = require('./calc').add
+ console.log('2 + 3 =', add(2, 3))
+```
+
+The transformed `index.js` now works with our new API.
+
+```sh
+node index.js
+2 + 3 = 5
+```
