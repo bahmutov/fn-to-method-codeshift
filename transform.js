@@ -4,7 +4,12 @@ function transform (file, api, options) {
   console.log('transforming', file.path)
 
   const parsed = j(file.source)
-  const transformed = parsed.find(j.ImportDeclaration)
+  parsed.find(j.CallExpression)
+    .forEach(function (path) {
+      console.log(path.value)
+    })
+
+  const transformed = parsed
 
   const outputOptions = {
     quote: 'single'
